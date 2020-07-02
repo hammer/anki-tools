@@ -11,9 +11,11 @@ mc_decks = decks.loc[decks['name'].str.startswith('Mandarin Companion')]
 duo_decks = decks.loc[decks['name'].str.startswith('Duolingo')]
 
 # TODO(hammer): iterate through all of the decks
-parse_pattern = '### Card {}\nFront\n* {characters}\n\nBack\n* {english}\n* {pinyin:S}'
-outfile = 'blah.csv'
-cards_str = npcr_decks.iloc[0].loc['cards']
-cards_parsed = parse.findall(parse_pattern, cards)
+deck = npcr_decks.iloc[0]
+outfile = deck.loc['name'] + '.csv'
+cards_str = deck.loc['cards']
+
+parse_pattern = '### Card {}\nFront\n* {characters}\n\nBack\n* {english}\n* {pinyin}\n\n'
+cards_parsed = parse.findall(parse_pattern, cards_str)
 cards_df = pd.DataFrame([note.named for note in list(cards_parsed)])
-cards_df.to_csv(outfile, sep='|', encoding='utf-8')
+cards_df.to_csv(outfile, header=False, index=False, sep='|', encoding='utf-8')
